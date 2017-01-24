@@ -1,0 +1,18 @@
+<tabs>
+    <tab
+        id="@+id/tab_posts"
+        icon="@drawable/ic_action_subject"
+        title="@string/posts"/>
+    <tab
+        id="@+id/tab_minis"
+        icon="@drawable/ic_action_list"
+        title="@string/minis" />
+    <tab
+        id="@+id/tab_random"
+        icon="@drawable/ic_av_shuffle"
+        title="@string/random" />
+    <tab
+        id="@+id/tab_reading_list"
+        icon="@drawable/ic_action_timeline"
+        title="@string/reading_list" />
+</tabs>

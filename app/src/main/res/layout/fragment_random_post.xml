@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="post"
+            type="com.pierrejacquier.waitbutwhyunofficial.items.PostItem" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context="com.pierrejacquier.waitbutwhyunofficial.fragments.RandomPostFragment">
+
+        <RelativeLayout
+            android:id="@+id/two_line_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?selectableItemBackground"
+            android:clickable="true"
+            android:minHeight="72dp"
+            android:paddingEnd="?listPreferredItemPaddingRight"
+            android:paddingLeft="?listPreferredItemPaddingLeft"
+            android:paddingRight="?listPreferredItemPaddingRight"
+            android:paddingStart="?listPreferredItemPaddingLeft">
+
+            <ImageView
+                android:id="@+id/primary_action"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="16dp"
+                android:scaleType="centerInside" />
+
+            <LinearLayout
+                android:id="@+id/lines_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignWithParentIfMissing="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_toEndOf="@+id/primary_action"
+                android:layout_toLeftOf="@+id/secondary_action"
+                android:layout_toRightOf="@+id/primary_action"
+                android:layout_toStartOf="@+id/secondary_action"
+                android:orientation="vertical"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp">
+
+                <TextView
+                    android:id="@+id/first_text_view"
+                    style="@style/TextAppearance.AppCompat.Body2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/colorPrimaryText"
+                    android:transitionName="title"
+                    tools:text="@{post.title}" />
+
+                <TextView
+                    android:id="@+id/second_text_view"
+                    style="@style/TextAppearance.AppCompat.Body1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/colorSecondaryText"
+                    tools:text="@{post.getCommentsString}" />
+            </LinearLayout>
+
+            <!-- Can be replaced by a widget -->
+            <ImageView
+                android:id="@+id/secondary_action"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:alpha="0.54"
+                android:scaleType="centerInside"
+                card_view:srcCompat="@drawable/ic_navigation_more_vert" />
+        </RelativeLayout>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/another_one"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Another one"
+            />
+
+    </LinearLayout>
+
+</layout>
