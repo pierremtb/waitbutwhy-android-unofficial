@@ -26,11 +26,15 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
+import com.mikepenz.fastadapter.adapters.FooterAdapter;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.listeners.ClickEventHook;
+import com.mikepenz.fastadapter_extensions.items.ProgressItem;
+import com.mikepenz.fastadapter_extensions.scroll.EndlessRecyclerOnScrollListener;
 import com.pierrejacquier.waitbutwhyunofficial.R;
 import com.pierrejacquier.waitbutwhyunofficial.databinding.FragmentPostsBinding;
 import com.pierrejacquier.waitbutwhyunofficial.items.PostItem;
+import com.pierrejacquier.waitbutwhyunofficial.utils.DbHelper;
 import com.pierrejacquier.waitbutwhyunofficial.utils.Utils;
 
 import org.jsoup.Jsoup;
@@ -47,6 +51,14 @@ public class PostsFragment extends Fragment implements PopupMenu.OnMenuItemClick
     private OnFragmentInteractionListener mListener;
     private FragmentPostsBinding binding;
     private PostItem currentItem;
+    private int currentPage = 1;
+
+    private FastItemAdapter fastAdapter = new FastItemAdapter();
+    private FooterAdapter<ProgressItem> footerAdapter;
+
+    private String category;
+
+    private DbHelper dbHelper;
 
     public PostsFragment() {}
 
@@ -58,15 +70,11 @@ public class PostsFragment extends Fragment implements PopupMenu.OnMenuItemClick
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        String category = getArguments().getString("category");
+        dbHelper = new DbHelper(getContext());
 
-        Utils.fetchPosts(category, 1, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                displayPosts(response);
-            }
-        }, getContext());
+        category = getArguments().getString("category");
 
+        fetchPosts();
     }
 
     @Override
@@ -94,22 +102,31 @@ public class PostsFragment extends Fragment implements PopupMenu.OnMenuItemClick
         mListener = null;
     }
 
-    private void displayPosts(String response) {
-        Document document = Jsoup.parse(response);
-        Elements longPosts = document.select(".older-postlist > #widget-tab2-content > ul > li");
-        List<PostItem> postItems = new ArrayList<>();
-        for (Element longPost : longPosts) {
-            PostItem post = new PostItem(longPost);
-            postItems.add(post);
-        }
+    @Override
+    public void onResume() {
+        super.onResume();
+        fetchPosts();
+    }
 
-        FastItemAdapter fastAdapter = new FastItemAdapter();
+    private void fetchPosts() {
+        Utils.fetchPosts(category, 1, getContext(), new Utils.PostsReceiver() {
+            @Override
+            public void onPostsReceived(List<PostItem> posts) {
+                displayPosts(posts);
+            }
+        });
+    }
 
-        binding.recyclerView.setAdapter(fastAdapter);
+    private void displayPosts(List<PostItem> posts) {
+        fastAdapter = new FastItemAdapter();
+        footerAdapter = new FooterAdapter<>();
+
+        binding.recyclerView.setAdapter(footerAdapter.wrap(fastAdapter));
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        fastAdapter.add(postItems);
+        fastAdapter.add(posts);
+        fastAdapter.notifyDataSetChanged();
         fastAdapter.withSelectable(true);
         fastAdapter.withOnClickListener(new FastAdapter.OnClickListener<PostItem>() {
             @Override
@@ -134,6 +151,22 @@ public class PostsFragment extends Fragment implements PopupMenu.OnMenuItemClick
             }
         });
 
+        binding.recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(footerAdapter) {
+            @Override
+            public void onLoadMore(final int currentPage) {
+                footerAdapter.clear();
+                footerAdapter.add(new ProgressItem().withEnabled(false));
+
+                Utils.fetchPosts(category, currentPage, getContext(), new Utils.PostsReceiver() {
+                    @Override
+                    public void onPostsReceived(List<PostItem> posts) {
+                        footerAdapter.clear();
+                        fastAdapter.add(posts);
+                    }
+                });
+            }
+        });
+
         binding.recyclerView.setVisibility(View.VISIBLE);
         binding.progressView.setVisibility(View.GONE);
     }
@@ -154,6 +187,8 @@ public class PostsFragment extends Fragment implements PopupMenu.OnMenuItemClick
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.mark_as_read:
+                dbHelper.toggleReadPost(this.currentItem.getLink());
+                this.fetchPosts();
                 return true;
             case R.id.add_to_reading_list:
                 return true;

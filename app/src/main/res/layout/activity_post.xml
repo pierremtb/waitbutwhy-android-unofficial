@@ -77,9 +77,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
+            android:backgroundTint="@{post.read ? @color/md_green_500 : @color/md_blue_500}"
             app:layout_anchor="@id/app_bar"
             app:layout_anchorGravity="bottom|end"
-            app:srcCompat="@drawable/ic_action_visibility" />
+            android:src="@{post.read ? @drawable/ic_action_visibility_off : @drawable/ic_action_visibility}" />
 
     </android.support.design.widget.CoordinatorLayout>
 </layout>

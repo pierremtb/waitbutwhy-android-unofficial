@@ -25,6 +25,7 @@ public class PostItem extends AbstractItem<PostItem, PostItem.ViewHolder> {
     public String link;
     public int commentsNumber;
     public String thumbnailLink;
+    public boolean read = false;
 
     public PostItem(Element post) {
         this.title = post.select("h5 a").html();
@@ -55,11 +56,19 @@ public class PostItem extends AbstractItem<PostItem, PostItem.ViewHolder> {
         return thumbnailLink;
     }
 
+    public boolean isRead() {
+        return read;
+    }
+
+    public void setRead(boolean read) {
+        this.read = read;
+    }
+
     public PostItem withPostPage(String response) {
         Document document = Jsoup.parse(response);
         this.title = document.select("header > h1").html();
         this.commentsNumber = 0;
-        this.link = "";
+        this.link = document.select("head link[rel=\"canonical\"]").attr("href");
         return this;
     }
 

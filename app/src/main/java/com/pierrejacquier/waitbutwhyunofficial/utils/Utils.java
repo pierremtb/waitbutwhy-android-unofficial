@@ -11,28 +11,67 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.pierrejacquier.waitbutwhyunofficial.items.PostItem;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by pierremtb on 23/01/2017.
  */
 
 public class Utils {
+
     public static void openOnWBW(String link, Context context) {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
         context.startActivity(browserIntent);
     }
 
-    public static void fetchPosts(String category, int pageNumber, Response.Listener<String> responseListener, Context context) {
+    public interface PostsReceiver {
+        void onPostsReceived(List<PostItem> posts);
+    }
+
+    public static void fetchPosts(String category, int pageNumber, Context context, final PostsReceiver postsReceiver) {
+        fetchPosts(category, pageNumber, context, postsReceiver, true);
+    }
+
+    public static void fetchPosts(String category, int pageNumber,
+                                  Context context, final PostsReceiver postsReceiver,
+                                  boolean shouldCache) {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
+
+        final DbHelper dbHelper;
+        dbHelper = new DbHelper(context);
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET ,
                 "http://waitbutwhy.com/" + category + "/page/" + pageNumber,
-                responseListener, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("Error", "Error");
-            }
-        });
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Document document = Jsoup.parse(response);
+                        Elements longPosts = document.select(".older-postlist > #widget-tab2-content > ul > li");
+                        List<PostItem> postItems = new ArrayList<>();
+                        for (Element longPost : longPosts) {
+                            PostItem post = new PostItem(longPost);
+                            post.setRead(dbHelper.isPostRead(post.getLink()));
+                            postItems.add(post);
+                        }
+                        postsReceiver.onPostsReceived(postItems);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("Error", "Error");
+                    }
+                });
+
+        stringRequest.setShouldCache(shouldCache);
 
         requestQueue.add(stringRequest);
     }
@@ -63,6 +102,8 @@ public class Utils {
                 Log.e("Error", "Error");
             }
         });
+
+        stringRequest.setShouldCache(false);
 
         requestQueue.add(stringRequest);
     }

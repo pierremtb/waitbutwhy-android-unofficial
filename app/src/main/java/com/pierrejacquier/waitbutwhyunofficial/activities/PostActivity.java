@@ -16,6 +16,7 @@ import com.android.volley.Response;
 import com.pierrejacquier.waitbutwhyunofficial.R;
 import com.pierrejacquier.waitbutwhyunofficial.data.Post;
 import com.pierrejacquier.waitbutwhyunofficial.databinding.ActivityPostBinding;
+import com.pierrejacquier.waitbutwhyunofficial.utils.DbHelper;
 import com.pierrejacquier.waitbutwhyunofficial.utils.Utils;
 
 import org.jsoup.Jsoup;
@@ -27,9 +28,13 @@ public class PostActivity extends AppCompatActivity {
     private ActivityPostBinding binding;
     private Post post;
 
+    private DbHelper dbHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        dbHelper = new DbHelper(this);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_post);
 
@@ -40,6 +45,7 @@ public class PostActivity extends AppCompatActivity {
         post = new Post()
                 .withLink(intent.getStringExtra("link"))
                 .withTitle(intent.getStringExtra("title"));
+        post.setRead(dbHelper.isPostRead(post.getLink()));
 
         binding.setPost(post);
 
@@ -60,8 +66,12 @@ public class PostActivity extends AppCompatActivity {
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                boolean postRead = dbHelper.toggleReadPost(post.getLink());
+                post.setRead(postRead);
+                binding.setPost(post);
+                binding.executePendingBindings();
+                Snackbar.make(view, postRead ? "Post marked as read" : "Post marked as not read", Snackbar.LENGTH_LONG)
+                        .show();
             }
         });
     }

@@ -13,6 +13,7 @@ public class Post {
     private int commentsNumber;
     private String link;
     private Spanned content;
+    public boolean read = false;
 
     public Post(PostItem item) {
         this.title = item.getTitle();
@@ -35,6 +36,14 @@ public class Post {
     public Post withLink(String link) {
         this.link = link;
         return this;
+    }
+
+    public boolean isRead() {
+        return read;
+    }
+
+    public void setRead(boolean read) {
+        this.read = read;
     }
 
     public String getTitle() {

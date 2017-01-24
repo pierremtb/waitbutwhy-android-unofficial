@@ -35,10 +35,10 @@ import com.roughike.bottombar.OnTabSelectListener;
 
 public class MainActivity extends AppCompatActivity implements PostsFragment.OnFragmentInteractionListener, RandomPostFragment.OnFragmentInteractionListener {
 
-    private static final int DRAWER_EXPLORE = 0;
-    private static final int DRAWER_DIVIDER = 1;
-    private static final int DRAWER_SETTINGS = 2;
-    private static final int DRAWER_ABOUT = 3;
+    private static final int DRAWER_EXPLORE = 1;
+    private static final int DRAWER_DIVIDER = 2;
+    private static final int DRAWER_SETTINGS = 3;
+    private static final int DRAWER_ABOUT = 4;
 
     private Toolbar toolbar;
     private ActivityMainBinding binding;
@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements PostsFragment.OnF
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        Log.d("trsuiae", position+"");
+                        Log.e("trsuiae", position+"");
                         switch (position) {
                             case DRAWER_EXPLORE:
                                 break;
