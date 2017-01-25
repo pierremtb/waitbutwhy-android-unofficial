@@ -11,7 +11,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.pierrejacquier.waitbutwhyunofficial.items.PostItem;
+import com.pierrejacquier.waitbutwhyunofficial.data.PostItem;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -34,6 +34,10 @@ public class Utils {
 
     public interface PostsReceiver {
         void onPostsReceived(List<PostItem> posts);
+    }
+
+    public interface PostReceiver {
+        void onPostReceived(PostItem post);
     }
 
     public static void fetchPosts(String category, int pageNumber, Context context, final PostsReceiver postsReceiver) {
@@ -91,12 +95,17 @@ public class Utils {
         requestQueue.add(stringRequest);
     }
 
-    public static void getRandomPost(Response.Listener<String> responseListener, Context context) {
+    public static void getRandomPost(Context context, final PostReceiver postReceiver) {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET ,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET,
                 "http://waitbutwhy.com/random/",
-                responseListener, new Response.ErrorListener() {
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        postReceiver.onPostReceived(new PostItem().withPostPage(response));
+                    }
+                }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("Error", "Error");

@@ -12,7 +12,7 @@
         icon="@drawable/ic_av_shuffle"
         title="@string/random" />
     <tab
-        id="@+id/tab_reading_list"
-        icon="@drawable/ic_action_timeline"
-        title="@string/reading_list" />
+        id="@+id/tab_bookmarks"
+        icon="@drawable/ic_action_bookmark"
+        title="@string/bookmarks" />
 </tabs>

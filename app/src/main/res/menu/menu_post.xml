@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-<item android:id="@+id/add_to_reading_list"
-    android:title="@string/add_to_reading_list" />
-<item android:id="@+id/mark_as_read"
-    android:title="@string/mark_as_read" />
-<item android:id="@+id/open_on_wbw_website"
-    android:title="@string/open_on_wbw_website" />
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/share"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_social_share"
+        android:title="@string/share" />
+    <item android:id="@+id/open_on_wbw_website"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_exit_to_app"
+        android:title="@string/open_on_wbw_website" />
 </menu>

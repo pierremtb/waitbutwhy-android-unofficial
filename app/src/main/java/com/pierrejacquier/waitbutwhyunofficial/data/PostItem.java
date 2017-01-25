@@ -1,14 +1,10 @@
-package com.pierrejacquier.waitbutwhyunofficial.items;
+package com.pierrejacquier.waitbutwhyunofficial.data;
 
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
-import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.items.AbstractItem;
-import com.mikepenz.fastadapter.listeners.ClickEventHook;
 import com.pierrejacquier.waitbutwhyunofficial.R;
 import com.pierrejacquier.waitbutwhyunofficial.databinding.PostItemBinding;
 
@@ -16,7 +12,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-import java.net.URL;
 import java.util.List;
 import java.util.Scanner;
 
@@ -26,6 +21,7 @@ public class PostItem extends AbstractItem<PostItem, PostItem.ViewHolder> {
     public int commentsNumber;
     public String thumbnailLink;
     public boolean read = false;
+    public boolean bookmarked = false;
 
     public PostItem(Element post) {
         this.title = post.select("h5 a").html();
@@ -35,6 +31,26 @@ public class PostItem extends AbstractItem<PostItem, PostItem.ViewHolder> {
     }
 
     public PostItem() {}
+
+    public PostItem withTitle(String title) {
+        this.title = title;
+        return this;
+    }
+
+    public PostItem withCommentsNumber(int commentsNumber) {
+        this.commentsNumber = commentsNumber;
+        return this;
+    }
+
+    public PostItem withLink(String link) {
+        this.link = link;
+        return this;
+    }
+
+    public PostItem withThumbnailLink(String link) {
+        this.thumbnailLink = link;
+        return this;
+    }
 
     public String getTitle() {
         return title;
@@ -64,6 +80,14 @@ public class PostItem extends AbstractItem<PostItem, PostItem.ViewHolder> {
         this.read = read;
     }
 
+    public boolean isBookmarked() {
+        return bookmarked;
+    }
+
+    public void setBookmarked(boolean bookmarked) {
+        this.bookmarked = bookmarked;
+    }
+
     public PostItem withPostPage(String response) {
         Document document = Jsoup.parse(response);
         this.title = document.select("header > h1").html();
@@ -91,7 +115,7 @@ public class PostItem extends AbstractItem<PostItem, PostItem.ViewHolder> {
             .with(viewHolder.itemView.getContext())
             .load(this.getThumbnailLink())
             .centerCrop()
-            .placeholder(R.drawable.ic_action_subject)
+            .placeholder(null)
             .crossFade()
             .into(viewHolder.binding.primaryAction);
     }
