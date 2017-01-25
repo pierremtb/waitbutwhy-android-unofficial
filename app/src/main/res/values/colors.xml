@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#263238</color>
-    <color name="colorPrimaryDark">#19252B</color>
+    <!--Main activity-->
+    <color name="colorPrimary">@color/md_grey_800</color>
+    <color name="colorPrimaryDark">@color/md_grey_900</color>
     <color name="colorAccent">@color/md_blue_500</color>
-    <color name="colorBackground">#37474F</color>
+    <color name="colorBackground">@color/md_grey_300</color>
+    <color name="colorToolbarContent">@color/md_grey_800</color>
+
+    <!--Post activity-->
+    <color name="colorPrimaryPost">@color/md_grey_800</color>
+    <color name="colorPrimaryDarkPost">@color/md_grey_900</color>
+
+
     <color name="colorLightBackground">#fafafa</color>
     <color name="colorLightText">#616161</color>
     <color name="colorPrimaryText">#DE000000</color>
@@ -24,4 +32,5 @@
     <color name="semitransparent_white">#80ffffff</color>
     <color name="colorLightTextDarker">#424242</color>
     <color name="colorPrimaryTextDark">#FFFFFF</color>
+    <color name="colorSecondaryTextDark">#B3FFFFFF</color>
 </resources>

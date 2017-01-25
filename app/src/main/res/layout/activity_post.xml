@@ -4,48 +4,56 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="post" type="com.pierrejacquier.waitbutwhyunofficial.data.Post"/>
+
+        <variable
+            name="post"
+            type="com.pierrejacquier.waitbutwhyunofficial.data.PostItem" />
     </data>
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
         tools:context="com.pierrejacquier.waitbutwhyunofficial.activities.PostActivity">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/app_bar"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/app_bar_height"
+            android:layout_height="250dp"
             android:fitsSystemWindows="true"
             android:theme="@style/AppTheme.AppBarOverlay">
 
-            <android.support.design.widget.CollapsingToolbarLayout
-                android:id="@+id/toolbar_layout"
+            <net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
-                app:contentScrim="?attr/colorPrimary"
-                app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Subhead"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                app:maxLines="3">
+
+                <ImageView
+                    android:id="@+id/background_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fitsSystemWindows="true"
+                    android:scaleType="centerCrop"
+                    android:tint="#32000000"
+                    android:transitionName="post"
+                    app:layout_collapseMode="parallax" />
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
-                    app:layout_collapseMode="pin"
                     android:title="@{post.title}"
-                    android:transitionName="title"
-                    app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-            </android.support.design.widget.CollapsingToolbarLayout>
+                    app:layout_collapseMode="pin" />
+            </net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout>
         </android.support.design.widget.AppBarLayout>
 
         <com.github.rahatarmanahmed.cpv.CircularProgressView
             android:id="@+id/progress_view"
             android:layout_width="80dp"
-            android:layout_gravity="center"
             android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="320dp"
             app:cpv_animAutostart="true"
             app:cpv_indeterminate="true" />
 
@@ -56,19 +64,15 @@
             tools:context="com.pierrejacquier.waitbutwhyunofficial.activities.PostActivity"
             tools:showIn="@layout/activity_post">
 
-            <!--<TextView-->
-                <!--android:id="@+id/content"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_margin="@dimen/text_margin"-->
-                <!--android:text="@{post.content}" />-->
-
             <WebView
                 android:id="@+id/content"
-                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/text_margin" />
+                android:layout_marginBottom="64dp"
+                android:layout_marginLeft="@dimen/text_margin"
+                android:layout_marginRight="@dimen/text_margin"
+                android:layout_marginTop="32dp"
+                android:visibility="gone" />
 
         </android.support.v4.widget.NestedScrollView>
 
@@ -77,10 +81,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
-            android:backgroundTint="@{post.read ? @color/md_green_500 : @color/md_blue_500}"
+            android:src="@{post.bookmarked ? @drawable/ic_action_bookmark : @drawable/ic_action_bookmark_border}"
             app:layout_anchor="@id/app_bar"
-            app:layout_anchorGravity="bottom|end"
-            android:src="@{post.read ? @drawable/ic_action_visibility_off : @drawable/ic_action_visibility}" />
+            app:layout_anchorGravity="bottom|end" />
 
     </android.support.design.widget.CoordinatorLayout>
 </layout>
