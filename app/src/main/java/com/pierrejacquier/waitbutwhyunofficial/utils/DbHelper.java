@@ -105,6 +105,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 PostItem post = new PostItem()
                         .withTitle(cursor.getString(cursor.getColumnIndex(KEY_TITLE)))
                         .withLink(cursor.getString(cursor.getColumnIndex(KEY_LINK)))
+                        .withBookmarked(true)
                         .withThumbnailLink(cursor.getString(cursor.getColumnIndex(KEY_THUMBNAIL_LINK)));
                 posts.add(post);
                 cursor.moveToNext();

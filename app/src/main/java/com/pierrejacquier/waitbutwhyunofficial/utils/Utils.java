@@ -3,6 +3,7 @@ package com.pierrejacquier.waitbutwhyunofficial.utils;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -63,6 +64,7 @@ public class Utils {
                         for (Element longPost : longPosts) {
                             PostItem post = new PostItem(longPost);
                             post.setRead(dbHelper.isPostRead(post.getLink()));
+                            post.setBookmarked(dbHelper.isPostBookmarked(post));
                             postItems.add(post);
                         }
                         postsReceiver.onPostsReceived(postItems);
@@ -115,5 +117,19 @@ public class Utils {
         stringRequest.setShouldCache(false);
 
         requestQueue.add(stringRequest);
+    }
+
+    public static void sharePost(PostItem post, Context context) {
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        String shareBody = post.getLink();
+        String shareSub = post.getTitle();
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, shareSub);
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+        context.startActivity(Intent.createChooser(sharingIntent, "Share using"));
+    }
+
+    public static String getHexColor(int resColor, Context context) {
+        return "#" + Integer.toHexString(ContextCompat.getColor(context, resColor));
     }
 }

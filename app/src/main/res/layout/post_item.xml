@@ -88,17 +88,26 @@
                         android:id="@+id/bookmark"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:tint="@color/colorPrimaryText"
+                        android:tint="@color/colorSecondaryText"
                         android:scaleType="centerInside"
                         android:src="@{post.bookmarked ? @drawable/ic_action_bookmark : @drawable/ic_action_bookmark_border}"/>
 
+                    <!--<ImageView-->
+                        <!--android:id="@+id/mark_as_read"-->
+                        <!--android:layout_width="40dp"-->
+                        <!--android:layout_height="40dp"-->
+                        <!--android:tint="@color/colorPrimaryText"-->
+                        <!--android:scaleType="centerInside"-->
+                        <!--android:src="@{post.read ? @drawable/ic_action_visibility_off : @drawable/ic_action_visibility}"/>-->
+
                     <ImageView
-                        android:id="@+id/mark_as_read"
+                        android:id="@+id/share"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:tint="@color/colorPrimaryText"
+                        android:layout_marginLeft="8dp"
+                        android:tint="@color/colorSecondaryText"
                         android:scaleType="centerInside"
-                        android:src="@{post.read ? @drawable/ic_action_visibility_off : @drawable/ic_action_visibility}"/>
+                        card_view:srcCompat="@drawable/ic_social_share"/>
 
                 </LinearLayout>
             </RelativeLayout>

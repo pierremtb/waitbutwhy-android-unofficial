@@ -47,6 +47,11 @@ public class PostItem extends AbstractItem<PostItem, PostItem.ViewHolder> {
         return this;
     }
 
+    public PostItem withBookmarked(boolean bookmarked) {
+        this.bookmarked = bookmarked;
+        return this;
+    }
+
     public PostItem withThumbnailLink(String link) {
         this.thumbnailLink = link;
         return this;

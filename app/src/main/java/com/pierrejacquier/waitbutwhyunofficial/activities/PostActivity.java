@@ -81,7 +81,7 @@ public class PostActivity extends AppCompatActivity {
                         "<style>" +
                             "img {width: 100%; height: auto}" +
                             ".fsb-social-bar,#social-ads{display:none}" +
-                            "a {color: " + getResources().getColor(R.color.colorAccent) + "}" +
+                            "a {color: " + Utils.getHexColor(R.color.colorAccent, getApplicationContext()) + "}" +
                         "</style>");
                 binding.content.loadDataWithBaseURL("", contents.html(), "text/html", "UTF-8", "");
                 binding.content.setVisibility(View.VISIBLE);
@@ -120,6 +120,7 @@ public class PostActivity extends AppCompatActivity {
                 supportFinishAfterTransition();
                 return true;
             case R.id.share:
+                Utils.sharePost(post, this);
                 return true;
             case R.id.open_on_wbw_website:
                 Utils.openOnWBW(post.getLink(), this);

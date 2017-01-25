@@ -11,15 +11,25 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activities.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:name=".activities.SplashActivity"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
 
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
+        </activity>
         <activity
             android:name=".activities.PostActivity"
             android:label="@string/title_activity_post"
@@ -27,20 +37,22 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.pierrejacquier.waitbutwhyunofficial.activities.MainActivity" />
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="http" />
-                <data android:scheme="https" />
-                <data android:host="waitbutwhy.com" />
-            </intent-filter>
-        </activity>
 
+            <!--TODO: make waitbutwhy.com links openable-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.VIEW" />-->
+
+                <!--<category android:name="android.intent.category.DEFAULT" />-->
+                <!--<category android:name="android.intent.category.BROWSABLE" />-->
+
+                <!--<data android:scheme="http" />-->
+                <!--<data android:scheme="https" />-->
+                <!--<data android:host="waitbutwhy.com" />-->
+            <!--</intent-filter>-->
+        </activity>
         <activity
             android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings">
-
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.pierrejacquier.waitbutwhyunofficial.activities.MainActivity" />

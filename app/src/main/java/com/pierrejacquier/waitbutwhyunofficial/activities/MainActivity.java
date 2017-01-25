@@ -1,16 +1,20 @@
 package com.pierrejacquier.waitbutwhyunofficial.activities;
 
+import android.app.SearchManager;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -124,15 +128,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public View onBind(@NonNull RecyclerView.ViewHolder viewHolder) {
                 if (viewHolder instanceof PostItem.ViewHolder) {
-                    return ((PostItem.ViewHolder) viewHolder).binding.markAsRead;
+                    return ((PostItem.ViewHolder) viewHolder).binding.share;
                 }
                 return null;
             }
 
             @Override
             public void onClick(View v, int position, FastAdapter<PostItem> fastAdapter, PostItem item) {
-//                dbHelper.toggleReadPost(item.getLink());
-//                fetchPosts();
+                Utils.sharePost(item, getApplicationContext());
             }
         };
 
@@ -164,14 +167,14 @@ public class MainActivity extends AppCompatActivity {
         binding.postsList.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                binding.postsList.setRefreshing(false);
+                showPosts(false);
             }
         });
 
-        binding.randomList.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        binding.minisList.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                binding.randomList.setRefreshing(false);
+                showMinis(false);
             }
         });
 
@@ -283,6 +286,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showPosts() {
+        showPosts(true);
+    }
+
+    private void showPosts(final boolean shouldCache) {
         hideNewRandomButton();
         showLoading();
         getSupportActionBar().setTitle("Posts");
@@ -291,11 +298,18 @@ public class MainActivity extends AppCompatActivity {
             public void onPostsReceived(List<PostItem> posts) {
                 Log.e("tnaiue", posts.toString());
                 displayPosts(posts, binding.postsList, postsAdapter);
+                if (!shouldCache) {
+                    binding.postsList.setRefreshing(false);
+                }
             }
-        });
+        }, shouldCache);
     }
 
     private void showMinis() {
+        showMinis(true);
+    }
+
+    private void showMinis(final boolean shouldCache) {
         hideNewRandomButton();
         showLoading();
         getSupportActionBar().setTitle("Minis");
@@ -303,8 +317,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPostsReceived(List<PostItem> posts) {
                 displayPosts(posts, binding.minisList, minisAdapter);
+                if (!shouldCache) {
+                    binding.minisList.setRefreshing(false);
+                }
             }
-        });
+        }, shouldCache);
     }
 
     private void showRandom() {
@@ -356,6 +373,31 @@ public class MainActivity extends AppCompatActivity {
         };
     }
 
+    private ClickEventHook<PostItem> getBookmarkButtonHook(final RecyclerView recyclerView) {
+        return new ClickEventHook<PostItem>() {
+            @Override
+            public View onBind(@NonNull RecyclerView.ViewHolder viewHolder) {
+                if (viewHolder instanceof PostItem.ViewHolder) {
+                    return ((PostItem.ViewHolder) viewHolder).binding.bookmark;
+                }
+                return null;
+            }
+
+            @Override
+            public void onClick(View v, int position, FastAdapter<PostItem> fastAdapter, PostItem post) {
+//                boolean postBookmarked = dbHelper.toggleBookmarkedPost(post);
+//                post.setBookmarked(postBookmarked);
+//                recyclerView.getLayoutManager().findViewByPosition(position).getRootView().
+//                        binding.setPost(post);
+//                binding.executePendingBindings();
+//                Snackbar.make(view,
+//                        getResources().getString(postBookmarked ? R.string.bookmark_added : R.string.bookmark_removed),
+//                        Snackbar.LENGTH_LONG)
+//                        .show();
+            }
+        };
+    }
+
     public void onPostSelected(PostItem post, View viewStart) {
         Intent intent = new Intent(this, PostActivity.class);
         intent.putExtra("title", post.getTitle());
@@ -374,17 +416,11 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.search:
-//                openAboutActivity();
-                return true;
-            default:
-                return false;
-        }
+        // Retrieve the SearchView and plug it into SearchManager
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+        SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        return true;
     }
 }
