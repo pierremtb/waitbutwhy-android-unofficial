@@ -1,6 +1,5 @@
 package com.pierrejacquier.waitbutwhyunofficial.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
@@ -68,9 +67,6 @@ public class PostActivity extends AppCompatActivity {
             .placeholder(null)
             .crossFade()
             .into(binding.backgroundImage);
-
-
-        final Context context = this;
 
         Utils.getPostContent(post.getLink(), new Response.Listener<String>() {
             @Override

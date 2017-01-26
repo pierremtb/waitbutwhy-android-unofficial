@@ -22,10 +22,6 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by pierremtb on 23/01/2017.
- */
-
 public class Utils {
 
     public static void openOnWBW(String link, Context context) {
@@ -110,6 +106,7 @@ public class Utils {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+//                TODO: show loading error
                 Log.e("Error", "Error");
             }
         });

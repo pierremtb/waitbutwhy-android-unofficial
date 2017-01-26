@@ -56,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
     private static final int DRAWER_RANDOM = 3;
     private static final int DRAWER_BOOKMARKS = 4;
     private static final int DRAWER_DIVIDER = 5;
-    private static final int DRAWER_SETTINGS = 6;
     private static final int DRAWER_ABOUT = 6;
 
     private Toolbar toolbar;
@@ -202,11 +201,6 @@ public class MainActivity extends AppCompatActivity {
         binding.progressView.setVisibility(View.GONE);
     }
 
-    private void openSettingsActivity() {
-        Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
-    }
-
     private void openAboutActivity() {
         new LibsBuilder()
                 .withActivityStyle(Libs.ActivityStyle.LIGHT)
@@ -242,11 +236,6 @@ public class MainActivity extends AppCompatActivity {
                                 .withIdentifier(DRAWER_BOOKMARKS)
                                 .withIcon(GoogleMaterial.Icon.gmd_collections_bookmark),
                         new DividerDrawerItem().withIdentifier(DRAWER_DIVIDER),
-//                        new SecondaryDrawerItem()
-//                                .withIdentifier(DRAWER_SETTINGS)
-//                                .withName(R.string.settings)
-//                                .withIcon(GoogleMaterial.Icon.gmd_settings)
-//                                .withSelectable(false),
                         new SecondaryDrawerItem()
                                 .withIdentifier(DRAWER_ABOUT)
                                 .withName(R.string.about)
@@ -256,7 +245,6 @@ public class MainActivity extends AppCompatActivity {
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        Log.e("trsuiae", position+"");
                         switch (position) {
                             case DRAWER_POSTS:
                                 showPosts();
@@ -270,9 +258,6 @@ public class MainActivity extends AppCompatActivity {
                             case DRAWER_BOOKMARKS:
                                 showBookmarks();
                                 break;
-//                            case DRAWER_SETTINGS:
-//                                openSettingsActivity();
-//                                break;
                             case DRAWER_ABOUT:
                                 openAboutActivity();
                                 break;
@@ -385,6 +370,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v, int position, FastAdapter<PostItem> fastAdapter, PostItem post) {
+//                TODO: toggle bookmarked
 //                boolean postBookmarked = dbHelper.toggleBookmarkedPost(post);
 //                post.setBookmarked(postBookmarked);
 //                recyclerView.getLayoutManager().findViewByPosition(position).getRootView().
@@ -404,12 +390,10 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("link", post.getLink());
         intent.putExtra("thumbnail_link", post.getThumbnailLink());
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this,
-                viewStart,   // Starting view
-                "post"    // The String
+                viewStart,
+                "post"
         );
-        //Start the Intent
         ActivityCompat.startActivity(this, intent, options.toBundle());
-//        startActivity(intent);
     }
 
     @Override
@@ -417,7 +401,7 @@ public class MainActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
 
-        // Retrieve the SearchView and plug it into SearchManager
+//        TODO: get and display search results
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
         SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
