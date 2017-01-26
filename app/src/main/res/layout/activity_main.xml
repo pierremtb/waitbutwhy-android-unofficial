@@ -2,6 +2,13 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+
+        <variable
+            name="dimens"
+            type="com.pierrejacquier.waitbutwhyunofficial.utils.ResponsiveDimens" />
+    </data>
+
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -25,13 +32,12 @@
             </android.support.design.widget.CollapsingToolbarLayout>
         </android.support.design.widget.AppBarLayout>
 
-        <com.github.rahatarmanahmed.cpv.CircularProgressView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
+        <com.github.rahatarmanahmed.cpv.CircularProgressView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/progress_view"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:visibility="visible"
             android:layout_gravity="center"
+            android:visibility="visible"
             app:cpv_animAutostart="true"
             app:cpv_indeterminate="true" />
 
@@ -42,8 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center"
             android:layout_marginBottom="100dp"
-            android:text="@string/another_one"
-            />
+            android:text="@string/another_one" />
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/posts_list"
@@ -53,11 +58,17 @@
             app:behavior_overlapTop="78dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/posts_recycler_view"
+            <android.support.percent.PercentRelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scrollbars="vertical" />
+                android:layout_height="wrap_content">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/posts_recycler_view"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="vertical"
+                    app:layout_marginLeftPercent="0%"
+                    app:layout_widthPercent="100%" />
+            </android.support.percent.PercentRelativeLayout>
         </android.support.v4.widget.SwipeRefreshLayout>
 
         <android.support.v4.widget.SwipeRefreshLayout
@@ -68,11 +79,17 @@
             app:behavior_overlapTop="78dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/minis_recycler_view"
+            <android.support.percent.PercentRelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scrollbars="vertical" />
+                android:layout_height="wrap_content">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/minis_recycler_view"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="vertical"
+                    app:layout_marginLeftPercent="0%"
+                    app:layout_widthPercent="100%" />
+            </android.support.percent.PercentRelativeLayout>
         </android.support.v4.widget.SwipeRefreshLayout>
 
         <android.support.v4.widget.SwipeRefreshLayout
@@ -83,27 +100,40 @@
             app:behavior_overlapTop="78dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/random_recycler_view"
+            <android.support.percent.PercentRelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scrollbars="vertical" />
+                android:layout_height="wrap_content">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/random_recycler_view"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="vertical"
+                    app:layout_marginLeftPercent="0%"
+                    app:layout_widthPercent="100%" />
+            </android.support.percent.PercentRelativeLayout>
 
         </android.support.v4.widget.SwipeRefreshLayout>
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/bookmarks_list"
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             app:behavior_overlapTop="78dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/bookmarks_recycler_view"
+            <android.support.percent.PercentRelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scrollbars="vertical" />
+                android:layout_height="wrap_content">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/bookmarks_recycler_view"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="vertical"
+                    app:layout_marginLeftPercent="0%"
+                    app:layout_widthPercent="100%" />
+            </android.support.percent.PercentRelativeLayout>
+
         </android.support.v4.widget.SwipeRefreshLayout>
 
     </android.support.design.widget.CoordinatorLayout>

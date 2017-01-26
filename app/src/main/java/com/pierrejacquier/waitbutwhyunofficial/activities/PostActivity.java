@@ -1,6 +1,7 @@
 package com.pierrejacquier.waitbutwhyunofficial.activities;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import com.pierrejacquier.waitbutwhyunofficial.R;
 import com.pierrejacquier.waitbutwhyunofficial.databinding.ActivityPostBinding;
 import com.pierrejacquier.waitbutwhyunofficial.data.PostItem;
 import com.pierrejacquier.waitbutwhyunofficial.utils.DbHelper;
+import com.pierrejacquier.waitbutwhyunofficial.utils.ResponsiveDimens;
 import com.pierrejacquier.waitbutwhyunofficial.utils.Utils;
 
 import org.jsoup.Jsoup;
@@ -29,6 +31,8 @@ public class PostActivity extends AppCompatActivity {
     private ActivityPostBinding binding;
     private PostItem post;
 
+    private ResponsiveDimens dimens;
+
     private DbHelper dbHelper;
 
     @Override
@@ -37,17 +41,14 @@ public class PostActivity extends AppCompatActivity {
 
         dbHelper = new DbHelper(this);
 
+        dimens = new ResponsiveDimens(this);
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_post);
 
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        new MaterializeBuilder()
-                .withActivity(this)
-                .withFullscreen(true)
-                .withStatusBarPadding(true)
-                .withTranslucentStatusBarProgrammatically(true)
-                .build();
+        materializeActivity(!dimens.isLandscape(), !dimens.isChromebook());
 
         Intent intent = getIntent();
         post = new PostItem()
@@ -100,6 +101,19 @@ public class PostActivity extends AppCompatActivity {
         });
     }
 
+    private void materializeActivity(boolean fullScreen) {
+        materializeActivity(fullScreen, true);
+    }
+
+    private void materializeActivity(boolean fullScreen, boolean statusBarPadding) {
+        new MaterializeBuilder()
+                .withActivity(this)
+                .withFullscreen(fullScreen)
+                .withStatusBarPadding(statusBarPadding)
+                .withTranslucentStatusBarProgrammatically(true)
+                .build();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -124,5 +138,13 @@ public class PostActivity extends AppCompatActivity {
             default:
                 return false;
         }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        this.dimens = new ResponsiveDimens(this);
+        materializeActivity(!dimens.isLandscape());
     }
 }

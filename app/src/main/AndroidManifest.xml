@@ -21,10 +21,12 @@
         </activity>
         <activity
             android:name=".activities.MainActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".activities.PostActivity"
             android:label="@string/title_activity_post"
+            android:configChanges="orientation|keyboardHidden"
             android:theme="@style/PostTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

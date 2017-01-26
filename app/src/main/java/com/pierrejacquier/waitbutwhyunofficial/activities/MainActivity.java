@@ -2,9 +2,15 @@ package com.pierrejacquier.waitbutwhyunofficial.activities;
 
 import android.app.SearchManager;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
+import android.databinding.ObservableField;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.percent.PercentLayoutHelper;
+import android.support.percent.PercentRelativeLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -12,6 +18,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -21,6 +28,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.aboutlibraries.LibsBuilder;
@@ -44,6 +52,7 @@ import com.pierrejacquier.waitbutwhyunofficial.R;
 import com.pierrejacquier.waitbutwhyunofficial.databinding.ActivityMainBinding;
 import com.pierrejacquier.waitbutwhyunofficial.data.PostItem;
 import com.pierrejacquier.waitbutwhyunofficial.utils.DbHelper;
+import com.pierrejacquier.waitbutwhyunofficial.utils.ResponsiveDimens;
 import com.pierrejacquier.waitbutwhyunofficial.utils.Utils;
 
 import java.util.ArrayList;
@@ -61,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private ActivityMainBinding binding;
 
+    private ResponsiveDimens dimens;
+
     private DbHelper dbHelper;
 
     private FastItemAdapter postsAdapter = new FastItemAdapter();
@@ -77,18 +88,15 @@ public class MainActivity extends AppCompatActivity {
 
         dbHelper = new DbHelper(this);
 
+        dimens = new ResponsiveDimens(this);
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         toolbar = binding.toolbar;
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Posts");
 
-        new MaterializeBuilder()
-                .withActivity(this)
-                .withFullscreen(true)
-                .withStatusBarPadding(true)
-                .withTranslucentStatusBarProgrammatically(true)
-                .build();
+        materializeActivity(!dimens.isLandscape(), !dimens.isChromebook());
 
         buildDrawer();
         setupRecyclerViews();
@@ -102,16 +110,45 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void materializeActivity(boolean fullScreen) {
+        materializeActivity(fullScreen, true);
+    }
+
+    private void materializeActivity(boolean fullScreen, boolean statusBarPadding) {
+        new MaterializeBuilder()
+                .withActivity(this)
+                .withFullscreen(fullScreen)
+                .withStatusBarPadding(statusBarPadding)
+                .withTranslucentStatusBarProgrammatically(true)
+                .build();
+    }
+
+    private void setRvDimens(View view) {
+        PercentRelativeLayout.LayoutParams params = (PercentRelativeLayout.LayoutParams) view.getLayoutParams();
+        PercentLayoutHelper.PercentLayoutInfo info = params.getPercentLayoutInfo();
+        info.leftMarginPercent = dimens.getPostsMarginLeft();
+        info.widthPercent = dimens.getPostsWidth();
+        view.requestLayout();
+    }
+
+    private void setRecyclerViewsDimensions() {
+        setRvDimens(binding.postsRecyclerView);
+        setRvDimens(binding.minisRecyclerView);
+        setRvDimens(binding.randomRecyclerView);
+        setRvDimens(binding.bookmarksRecyclerView);
+    }
+
     private void setupRecyclerViews() {
+        setRecyclerViewsDimensions();
         binding.postsRecyclerView.setAdapter(postsFooterAdapter.wrap(postsAdapter));
         binding.minisRecyclerView.setAdapter(minisFooterAdapter.wrap(minisAdapter));
         binding.randomRecyclerView.setAdapter(randomAdapter);
         binding.bookmarksRecyclerView.setAdapter(bookmarksAdapter);
 
-        binding.postsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        binding.minisRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        binding.postsRecyclerView.setLayoutManager(new GridLayoutManager(this, dimens.getPostsColumnsCount()));
+        binding.minisRecyclerView.setLayoutManager(new GridLayoutManager(this, dimens.getPostsColumnsCount()));
         binding.randomRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        binding.bookmarksRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        binding.bookmarksRecyclerView.setLayoutManager(new GridLayoutManager(this, dimens.getPostsColumnsCount()));
 
         binding.postsRecyclerView.setItemAnimator(new DefaultItemAnimator());
         binding.minisRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -281,7 +318,6 @@ public class MainActivity extends AppCompatActivity {
         Utils.fetchPosts("archive", 1, this, new Utils.PostsReceiver() {
             @Override
             public void onPostsReceived(List<PostItem> posts) {
-                Log.e("tnaiue", posts.toString());
                 displayPosts(posts, binding.postsList, postsAdapter);
                 if (!shouldCache) {
                     binding.postsList.setRefreshing(false);
@@ -406,5 +442,14 @@ public class MainActivity extends AppCompatActivity {
         SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         return true;
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        this.dimens = new ResponsiveDimens(this);
+        setRecyclerViewsDimensions();
+        materializeActivity(!dimens.isLandscape());
     }
 }

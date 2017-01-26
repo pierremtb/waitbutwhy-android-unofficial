@@ -2,6 +2,7 @@ package com.pierrejacquier.waitbutwhyunofficial.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -123,10 +124,17 @@ public class Utils {
         String shareSub = post.getTitle();
         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, shareSub);
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-        context.startActivity(Intent.createChooser(sharingIntent, "Share using"));
+
+        Intent finalIntent = Intent.createChooser(sharingIntent, "Share using");
+        finalIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(finalIntent);
     }
 
     public static String getHexColor(int resColor, Context context) {
         return "#" + Integer.toHexString(ContextCompat.getColor(context, resColor));
+    }
+
+    public static boolean isTablet(Context context) {
+        return (context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 }

@@ -48,6 +48,7 @@ dependencies {
     compile 'com.android.support:support-vector-drawable:25.1.0'
     compile 'com.android.support:support-v13:25.1.0'
     compile 'com.android.support:recyclerview-v7:25.1.0'
+    compile 'com.android.support:percent:25.1.0'
     compile 'com.mikepenz:iconics-core:2.8.2@aar'
     compile 'com.github.rahatarmanahmed:circularprogressview:2.5.0'
     compile 'com.mikepenz:google-material-typeface:2.2.0.3.original@aar'

@@ -1,12 +1,16 @@
 package com.pierrejacquier.waitbutwhyunofficial.data;
 
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.mikepenz.fastadapter.items.AbstractItem;
 import com.pierrejacquier.waitbutwhyunofficial.R;
 import com.pierrejacquier.waitbutwhyunofficial.databinding.PostItemBinding;
+import com.pierrejacquier.waitbutwhyunofficial.utils.ResponsiveDimens;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -116,6 +120,19 @@ public class PostItem extends AbstractItem<PostItem, PostItem.ViewHolder> {
     public void bindView(ViewHolder viewHolder, List<Object> posts) {
         super.bindView(viewHolder, posts);
         viewHolder.binding.setPost(this);
+        ResponsiveDimens dimens = new ResponsiveDimens(viewHolder.itemView.getContext());
+
+        RelativeLayout.LayoutParams params =
+                new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+        params.setMargins(dimens.getPostItemMarginLeft(),
+                            dimens.getPostItemMarginTop(),
+                            dimens.getPostItemMarginLeft(),
+                            dimens.getPostItemMarginTop());
+
+        viewHolder.binding.card.setLayoutParams(params);
+
         Glide
             .with(viewHolder.itemView.getContext())
             .load(this.getThumbnailLink())
