@@ -218,29 +218,44 @@ public class MainActivity extends AppCompatActivity {
         binding.minisRecyclerView.addOnScrollListener(getOnScrollListener(minisAdapter, minisFooterAdapter, "minis"));
     }
 
-    private void displayPosts(List<PostItem> posts, SwipeRefreshLayout list, FastItemAdapter fastAdapter) {
+    private void displayPosts(List<PostItem> posts, SwipeRefreshLayout list, RecyclerView rv, FastItemAdapter fastAdapter) {
         fastAdapter.clear();
         fastAdapter.add(posts);
         fastAdapter.notifyDataSetChanged();
-        hideLoading();
-        list.setVisibility(View.VISIBLE);
+        hideLoading(list);
+        rv.setVisibility(View.VISIBLE);
     }
 
-    private void showLoading() {
+    private void showLoading(SwipeRefreshLayout list) {
+        binding.postsRecyclerView.setVisibility(View.GONE);
+        binding.minisRecyclerView.setVisibility(View.GONE);
+        binding.randomRecyclerView.setVisibility(View.GONE);
+        binding.bookmarksRecyclerView.setVisibility(View.GONE);
         binding.postsList.setVisibility(View.GONE);
         binding.minisList.setVisibility(View.GONE);
         binding.randomList.setVisibility(View.GONE);
         binding.bookmarksList.setVisibility(View.GONE);
-        binding.progressView.setVisibility(View.VISIBLE);
+
+        list.setVisibility(View.VISIBLE);
+        list.setRefreshing(true);
     }
 
-    private void hideLoading() {
-        binding.progressView.setVisibility(View.GONE);
+    private void showRecyclerView(RecyclerView rv) {
+        rv.setVisibility(View.VISIBLE);
+    }
+
+    private void hideLoading(SwipeRefreshLayout list) {
+        list.setRefreshing(false);
     }
 
     private void openAboutActivity() {
         new LibsBuilder()
                 .withActivityStyle(Libs.ActivityStyle.LIGHT)
+                .withAboutIconShown(true)
+                .withAboutVersionShown(true)
+                .withAboutDescription("Wait But Why (Unofficial) is an " +
+                        "<a href=\"https://github.com/pierremtb/waitbutwhy-android-unofficial\">open-source app</a>, " +
+                        "<b>not affiliated with waitbutwhy.com</b>")
                 .start(this);
     }
 
@@ -313,15 +328,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void showPosts(final boolean shouldCache) {
         hideNewRandomButton();
-        showLoading();
+        showLoading(binding.postsList);
         getSupportActionBar().setTitle("Posts");
         Utils.fetchPosts("archive", 1, this, new Utils.PostsReceiver() {
             @Override
             public void onPostsReceived(List<PostItem> posts) {
-                displayPosts(posts, binding.postsList, postsAdapter);
-                if (!shouldCache) {
-                    binding.postsList.setRefreshing(false);
-                }
+                displayPosts(posts, binding.postsList, binding.postsRecyclerView, postsAdapter);
             }
         }, shouldCache);
     }
@@ -332,38 +344,35 @@ public class MainActivity extends AppCompatActivity {
 
     private void showMinis(final boolean shouldCache) {
         hideNewRandomButton();
-        showLoading();
+        showLoading(binding.minisList);
         getSupportActionBar().setTitle("Minis");
         Utils.fetchPosts("minis", 1, this, new Utils.PostsReceiver() {
             @Override
             public void onPostsReceived(List<PostItem> posts) {
-                displayPosts(posts, binding.minisList, minisAdapter);
-                if (!shouldCache) {
-                    binding.minisList.setRefreshing(false);
-                }
+                displayPosts(posts, binding.minisList, binding.minisRecyclerView, minisAdapter);
             }
         }, shouldCache);
     }
 
     private void showRandom() {
         showNewRandomButton();
-        showLoading();
+        showLoading(binding.randomList);
         getSupportActionBar().setTitle("Random post");
         Utils.getRandomPost(this, new Utils.PostReceiver() {
             @Override
             public void onPostReceived(PostItem post) {
                 List<PostItem> posts = new ArrayList<>();
                 posts.add(post);
-                displayPosts(posts, binding.randomList, randomAdapter);
+                displayPosts(posts, binding.randomList, binding.randomRecyclerView, randomAdapter);
             }
         });
     }
 
     private void showBookmarks() {
         hideNewRandomButton();
-        showLoading();
+        showLoading(binding.bookmarksList);
         getSupportActionBar().setTitle("Bookmarks");
-        displayPosts(dbHelper.getBookmarkedPosts(), binding.bookmarksList, bookmarksAdapter);
+        displayPosts(dbHelper.getBookmarkedPosts(), binding.bookmarksList, binding.bookmarksRecyclerView, bookmarksAdapter);
     }
 
     private void showNewRandomButton() {
