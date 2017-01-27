@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -144,7 +145,19 @@ public class PostActivity extends AppCompatActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
-        this.dimens = new ResponsiveDimens(this);
-        materializeActivity(!dimens.isLandscape());
+//        TODO: fix padding when rotation
+
+//        this.dimens = new ResponsiveDimens(this);
+////        materializeActivity(!dimens.isLandscape(), false);
+//        if (dimens.isLandscape()) {
+//            new MaterializeBuilder()
+//                    .withActivity(this)
+//                    .withFullscreen(false)
+//                    .withStatusBarPadding(false)
+//                    .withTranslucentStatusBarProgrammatically(true)
+//                    .build();
+//        } else {
+//            materializeActivity(true, true);
+//        }
     }
 }
